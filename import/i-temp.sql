@@ -15,6 +15,9 @@ delete from 零售单客户 where date_trunc('month',日期)::date in ('2015-05-
 select dataupdate('零售单客户','retail_c','20150531t');
 select dataupdate('零售单客户','retail_c','20150607t');
 
+delete from 零售单 where date_trunc('month',日期)::date in ('2015-05-01');
+select dataupdate('零售单','retail','20150531t');
+
 -- 产品成本
 -------------------------------------------------------------------------------------------------------------------------------------------
 drop table if exists 产品成本;
