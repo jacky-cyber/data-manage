@@ -92,7 +92,9 @@ create table 卡资料 (
 create table 卡类 (
   卡类型 varchar(255) primary key,
   卡类b varchar(255),
-  卡类a varchar(255)
+  卡类a varchar(255),
+  折扣率 numeric(20,4),
+  积分比率  numeric(20,4)
 );
 
 create table 客户 (
