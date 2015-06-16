@@ -6,7 +6,7 @@
 
 with w日期范围 as (
 select
-  '[2015-01-01,2015-04-30]'::daterange as 范围
+  '[2015-01-01,2015-05-31]'::daterange as 范围
 ),/* w销售_2014 as (
 select
   部门.二级部门编号,

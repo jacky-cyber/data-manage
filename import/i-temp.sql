@@ -19,6 +19,17 @@ select dataupdate('零售单客户','retail_c','20150614t');
 delete from 零售单 where date_trunc('month',日期)::date in ('2015-05-01');
 select dataupdate('零售单','retail','20150531t');
 
+-- 5月门店运营数据
+select dataupdate('销售出库单', 'sale','201505');
+select dataupdate('其他出库单', 'other_out','201505');
+select dataupdate('收发汇总表', 'warehouse','201505');
+delete from 盘盈单 where 日期 >= '2015-05-01';
+delete from 盘亏单 where 日期 >= '2015-05-01';
+select copyk3('盘盈单','overage/hongan-201505');
+select copyk3('盘盈单','overage/huicai-201505');
+select copyk3('盘亏单','overage/hongan-201505');
+select copyk3('盘亏单','overage/huicai-201505');
+
 -- 产品成本
 -------------------------------------------------------------------------------------------------------------------------------------------
 drop table if exists 产品成本;
