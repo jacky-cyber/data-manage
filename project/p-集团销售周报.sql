@@ -136,8 +136,8 @@ select
   上年外销 / 虹越周 / 7 as 上虹越年日均外销,
   外销 / nullif(上年外销,0) - 1 as 同比
 from
-  (select 虹越周,sum(sum(外销)) over (order by 虹越周) as 外销 from 周报数据 where 虹越年 = $3 and 虹越周 <= $2 and 模块编号 = $1 group by 1 ) t1
-  full join ( select 虹越周,sum(sum(外销)) over (order by 虹越周) as 上年外销 from 周报数据 where 虹越年 = $3 - 1 and 模块编号 = $1 group by 1 ) t2 using (虹越周)
+  (select 虹越周,sum(sum(外销)) over (order by 虹越周) as 外销 from 周报数据 where 虹越年 = $3 and 虹越周 <= $2 and 模块编号 != $1 group by 1 ) t1
+  full join ( select 虹越周,sum(sum(外销)) over (order by 虹越周) as 上年外销 from 周报数据 where 虹越年 = $3 - 1 and 模块编号 != $1 group by 1 ) t2 using (虹越周)
 order by
   1
 $$ language sql stable;

@@ -5,16 +5,15 @@
  */
  
 -- 用于销售周报
-delete from 销售出库单 where date_trunc('month',日期)::date in ('2015-05-01','2015-06-01');
-select dataupdate('销售出库单','sale','20150614t');
-select copyk3('销售出库单','sale/hongan-20150515t');
-select copyk3('销售出库单','sale/hongan-20150531t'); -- 虹安3批
+delete from 销售出库单 where date_trunc('month',日期)::date in ('2015-06-01');
+select dataupdate('销售出库单','sale','20150621t');
 
 -- 用于周报客流
 delete from 零售单客户 where date_trunc('month',日期)::date in ('2015-05-01','2015-06-01');
 select dataupdate('零售单客户','retail_c','20150531t');
 select dataupdate('零售单客户','retail_c','20150607t');
 select dataupdate('零售单客户','retail_c','20150614t');
+select dataupdate('零售单客户','retail_c','20150621t');
 
 delete from 零售单 where date_trunc('month',日期)::date in ('2015-05-01');
 select dataupdate('零售单','retail','20150531t');
