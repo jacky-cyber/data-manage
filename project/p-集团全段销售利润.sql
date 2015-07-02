@@ -6,11 +6,11 @@
 
 drop table if exists t日期范围,t日期范围sc;
 create temp table t日期范围 as select '[2014-01-01,2014-12-31]'::daterange as 范围;
-create temp table t日期范围sc as select '[2013-09-01,2014-12-31]'::daterange as 范围; 
+create temp table t日期范围sc as select '[2013-09-01,2014-12-31]'::daterange as 范围;
 
 -- 整体
 with w110 as ( -- 非商超销售预处理
-select    
+select
   case
     when t1.客户代码 = '999.0078.24' and 部门.实名 = '研究院' then '萌吖吖种子（淘宝）店'
     when t1.客户代码 = '999.0089' and 部门.实名 = '花卉城项目部' then '海宁国际花卉城（淘宝）店'

@@ -25,8 +25,8 @@ group by
 select
   实名,
   商品类别,
-  rank() over (partition by 实名 order by 销售金额 desc, 销售数量 desc) as 金额排行, 
-  rank() over (partition by 实名 order by 销售数量 desc, 销售金额 desc) as 数量排行, 
+  rank() over (partition by 实名 order by 销售金额 desc, 销售数量 desc) as 金额排行,
+  rank() over (partition by 实名 order by 销售数量 desc, 销售金额 desc) as 数量排行,
   w1.销售数量,
   w1.销售金额,
   w1.销售金额 / (sum(销售金额) over (partition by w1.实名)) as 销售金额占比

@@ -7,7 +7,7 @@
 -- copyk3(text, text)
 -- i: 表名, 文件相对'd:/data/import/'路径
 -- o: 插入表
-create or replace function copyk3(a text, b text) returns void as 
+create or replace function copyk3(a text, b text) returns void as
 $body$
 begin
   execute format('copy %s from ''d:/data/import/%s.txt'' csv header delimiter '',''  encoding ''gbk''',a,b);
@@ -18,7 +18,7 @@ language plpgsql volatile;
 -- copygbk(text, text)
 -- i: 表名,文件相对'd:/data/'路径
 -- o: 插入表
-create or replace function copygbk(a text, b text) returns void as 
+create or replace function copygbk(a text, b text) returns void as
 $body$
 begin
   execute format('copy %s from ''d:/data/%s'' csv header delimiter '',''  encoding ''gbk''',a,b);
@@ -29,7 +29,7 @@ language plpgsql volatile;
 -- dataupdate(text, text, text)
 -- i: 表名,表对应文件夹名,日期
 -- o: 插入表
-create or replace function dataupdate(t text, f text, m text) returns void as 
+create or replace function dataupdate(t text, f text, m text) returns void as
 $body$
 begin
   if  m ~ e'^\\d{6}$' then
@@ -40,7 +40,7 @@ begin
     end if;
   end if;
   if t !~ '零售单' then
-    execute format('    
+    execute format('
       select copyk3(''%s'',''%s/guomei-%s'');
       select copyk3(''%s'',''%s/hangzhou-%s'');
       select copyk3(''%s'',''%s/jinwuyue-%s'');
@@ -54,7 +54,7 @@ begin
       select copyk3(''%s'',''%s/zhejiang-%s'');
     ',t,f,m,t,f,m,t,f,m,t,f,m,t,f,m,t,f,m,t,f,m,t,f,m,t,f,m,t,f,m,t,f,m);
   end if;
-  execute format('    
+  execute format('
     select copyk3(''%s'',''%s/hongan-%s'');
     select copyk3(''%s'',''%s/huicai-%s'');
   ',t,f,m,t,f,m);
@@ -69,7 +69,7 @@ language plpgsql volatile;
 -- cardflowupdate(text)
 -- i: 日期
 -- o: 插入表
-create or replace function cardflowupdate(m text) returns void as 
+create or replace function cardflowupdate(m text) returns void as
 $body$
 begin
   if m ~ e'^\\d{6}$' then
@@ -82,7 +82,7 @@ $body$ language plpgsql volatile;
 -- monthlyupdate(text,text)
 -- i: 日期,会计期间
 -- o: 插入表
-create or replace function monthlyupdate(s text) returns void as 
+create or replace function monthlyupdate(s text) returns void as
 $body$
 begin
   execute format('

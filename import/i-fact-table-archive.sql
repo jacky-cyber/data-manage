@@ -31,7 +31,7 @@ create table 卡流水 (
 create table 其他入库单 (
   文件路径 varchar(255),
   账套 varchar(255),
-  日期 date, 
+  日期 date,
   单据编号 varchar(255),
   部门 varchar(255),
   产品长代码 varchar(255),

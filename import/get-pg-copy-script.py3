@@ -1,5 +1,5 @@
 # 2015 cai
-# 
+#
 # 生成PG数据库的K3数据文件导入脚本
 
 import os.path,re

@@ -70,6 +70,6 @@ from
   left join w2 using (卡号)
   left join w3 using (卡号)
   left join w4 using (卡号)
-  left join (select 卡号,卡类型,会员名称,发卡机构整合 from 卡资料) t using(卡号)  
+  left join (select 卡号,卡类型,会员名称,发卡机构整合 from 卡资料) t using(卡号)
  order by
   1;

@@ -60,7 +60,7 @@ where
   and t1.产品长代码 != '8.8.4.002.88888'
 group by
   1,2
-), /* w损耗_2014 as ( 
+), /* w损耗_2014 as (
 select
   部门.二级部门编号,
   日历.月,
@@ -75,7 +75,7 @@ where
   and (select 范围 from w日期范围) @> t1.日期
 group by
   1,2
-),  */ w损耗_2015 as ( 
+),  */ w损耗_2015 as (
 select
   仓库按代码.二级部门编号,
   日历.月,
@@ -143,7 +143,7 @@ group by
   1,2
 ), w编号 as (
 select
-  distinct 
+  distinct
   二级部门编号,
   实名 as 门店,
   generate_series(1,12,1) as 月
