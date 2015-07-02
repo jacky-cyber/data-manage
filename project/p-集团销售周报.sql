@@ -4,9 +4,6 @@
  * 周报（第22周更新）
  */
 
--- 商品缺失
-delete from 商品 where 代码 = '8.4.2.039.54061';
-insert into 商品 (代码,部门) values ('8.4.2.039.54061','长安苗圃');
 drop table if exists 周报部门编号, 周报数据;
 create temp table 周报部门编号 as select * from 部门编号 where 二级部门名称 not in ('温室资材部','草业事业部');
 
