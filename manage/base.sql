@@ -16,7 +16,7 @@ select
   date_part('month',d)::int as 月,
   to_char(d,'Dy') as 星期,
   hyyear(d::date) as 虹越年,
-  hyweek(d::date) as 虹越周 
+  hyweek(d::date) as 虹越周
 from
   generate_series('2012-01-01'::date,'2015-12-31'::date,'1 days') d;
 alter table 日历 add primary key (日期);
@@ -153,7 +153,7 @@ select copyk3('机构整合','base/institution-20150605');
 select copyk3('卡资料','base/cardinfo-20150603');
 select copygbk('卡类','other/card_class.csv');
 select copyk3('客户','base/kehu-20150605');
-select copyk3('商品','base/product-20150622');
+select copyk3('商品','base/product-20150629');
 select copyk3('商品经营目录','base/jingying-20150118');
 select copyk3('部门整合','base/department-20150104');
 select copyk3('部门整合','base/department-20150109');
@@ -169,12 +169,12 @@ select copyk3('商品辅助','base/product-aid-20150226');
 -----------------------------------------------------------------------------------------------------------------------------------------------------
 update 部门整合 set 名称 = '原苏州树山店' where 代码 = 216 and 名称 = '苏州树山店';  -- 该部门与苏州树山店冲突
 delete from 部门整合 where 文件路径 ~ '20150104' and 代码 = 279;  -- 名称存在两个“海宁国际花卉城网店”
- 
+
 alter table 部门整合
   add column 现用名 varchar(255),
   add column 实名 varchar(255);
 
--- 一些部门在K3不存在了但在已导出单据中存在    
+-- 一些部门在K3不存在了但在已导出单据中存在
 insert into
   部门整合(文件路径,名称,现用名)
 values
@@ -187,7 +187,7 @@ values
   ('20150101','浙江丽彩盆栽生产部','丽彩盆栽生产部'),
   ('20150101','虹越亚马逊店','虹越亚马逊店'),
   ('20150101','空部门','空部门');
-  
+
 -- 曾用名转现用名
 update 部门整合 set 现用名 = t.名称 from (select * from 部门整合 where 文件路径 = (select max(文件路径) from 部门整合)) t where t.代码 = 部门整合.代码;
 update
@@ -206,8 +206,8 @@ where
 -- 实名
 update
   部门整合
-set 
-  实名 = 
+set
+  实名 =
   case 现用名
     when '花木城店' then '昌邑花木城店'
     when '总部网店' then '园艺家总部（淘宝）店'
@@ -231,7 +231,7 @@ set
     when '绿植产品部' then '绿植采供部'
     when '绿植零批嘉兴点' then '嘉兴植物园点'
     when '绿植零批硖石点' then '海宁硖石点'
-    when '杭州西溪湿地' then '杭州西溪湿地店' 
+    when '杭州西溪湿地' then '杭州西溪湿地店'
     when '植物营养部二部（虹安）' then '植物营养部'
     when '绿植零批夏溪点' then '常州夏溪点'
     else 现用名
@@ -268,7 +268,7 @@ update 机构整合 set 实名 =
 delete from 机构整合 where 代码 = 21;  -- 与18同样被禁用
 create table 机构 as select distinct t1.名称,t1.实名,t2.* from 机构整合 t1 left join (select * from 部门编号 where 模块名称 = '平台') t2 on t1.实名= t2.二级部门名称;
 alter table 机构 add primary key (名称);
- 
+
 -- 仓库
 -------------------------------------------------------------------------------------------------------------------------------------------
 alter table 仓库 add column 实名 varchar(255);
@@ -305,7 +305,7 @@ update 仓库 set 实名 =
     when '90.5001' then '花彩商城店'
     else 名称
   end;
-  
+
 update 仓库 set 实名 = '商超运营部' where 名称 ~ (select 模式 from 商超名正则);
 
 create table 仓库按代码 as select distinct t1.代码,t1.名称,t1.实名,t2.* from 仓库 t1 left join (select * from 部门编号 where 模块名称 = '平台') t2 on t1.实名= t2.二级部门名称;
@@ -319,7 +319,7 @@ alter table 仓库按名称 add primary key (名称);
 alter table 客户 add column 是否关联客户 boolean default false;
 update
   客户
-set 
+set
   是否关联客户 = true
 where
   代码 in ('021.0653','021.0751','025.0810','025.1324','025.2301','571.1141','571.2224','571.9146','571.9164','573.495','573.527','573.850','999.0012','999.0040','573.1031');
@@ -327,7 +327,7 @@ where
 alter table 客户 add column 是否商超客户 boolean default false;
 update
   客户
-set 
+set
   是否商超客户 = true
 where
   代码 in ('571.3001','025.3801','025.3812','572.0499','571.9744','999.9989');
