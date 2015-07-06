@@ -40,4 +40,4 @@ class K3(object):
         if not os.path.exists(path_org_file) and m != 'dog.py':
           os.remove(path_new_file)
 import os, re, shutil
-K3('d:/data/o_import', 'd:/data/import', r'20150(630t|701).txt')
+K3('d:/data/o_import', 'd:/data/import', r'20150(630t|0705t|0706).txt')

@@ -5,13 +5,15 @@
  */
 
 -- 用于销售周报
-delete from 销售出库单 where date_trunc('month',日期)::date in ('2015-06-01');
+delete from 销售出库单 where date_trunc('month',日期)::date in ('2015-06-01','2015-07-01');
 select dataupdate('销售出库单','sale','20150630t');
+select dataupdate('销售出库单','sale','20150705t');
 
 -- 用于周报客流
-delete from 零售单客户 where date_trunc('month',日期)::date in ('2015-05-01','2015-06-01');
+delete from 零售单客户 where date_trunc('month',日期)::date in ('2015-05-01','2015-06-01','2015-07-01');
 select dataupdate('零售单客户','retail_c','20150531t');
 select dataupdate('零售单客户','retail_c','20150630t');
+select dataupdate('零售单客户','retail_c','20150705t');
 
 delete from 零售单 where date_trunc('month',日期)::date in ('2015-05-01','2015-06-01');
 select dataupdate('零售单','retail','20150531t');

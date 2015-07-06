@@ -157,7 +157,7 @@ select copyk3('机构整合','base/institution-20150605');
 select copyk3('卡资料','base/cardinfo-20150701');
 select copygbk('卡类','other/card_class.csv');
 select copyk3('客户','base/kehu-20150605');
-select copyk3('商品','base/product-20150701');
+select copyk3('商品','base/product-20150706');
 select copyk3('商品经营目录','base/jingying-20150118');
 select copyk3('部门整合','base/department-20150104');
 select copyk3('部门整合','base/department-20150109');
@@ -167,6 +167,7 @@ select copyk3('部门整合','base/department-20150406');
 select copyk3('部门整合','base/department-20150430');
 select copyk3('部门整合','base/department-20150504');
 select copyk3('部门整合','base/department-20150605');
+select copyk3('部门整合','base/department-20150706');
 select copyk3('商品辅助','base/product-aid-20150226');
 select copygbk('省份','other/provin.txt');
 
@@ -239,6 +240,7 @@ set
     when '杭州西溪湿地' then '杭州西溪湿地店'
     when '植物营养部二部（虹安）' then '植物营养部'
     when '绿植零批夏溪点' then '常州夏溪点'
+    when '绿植宁波镇海点' then '宁波镇海点'
     else 现用名
   end;
 
