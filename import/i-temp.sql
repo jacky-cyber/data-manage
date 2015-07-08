@@ -5,34 +5,12 @@
  */
 
 -- 用于销售周报
-delete from 销售出库单 where date_trunc('month',日期)::date in ('2015-06-01','2015-07-01');
-select dataupdate('销售出库单','sale','20150630t');
+delete from 销售出库单 where date_trunc('month',日期)::date in ('2015-07-01');
 select dataupdate('销售出库单','sale','20150705t');
 
 -- 用于周报客流
-delete from 零售单客户 where date_trunc('month',日期)::date in ('2015-05-01','2015-06-01','2015-07-01');
-select dataupdate('零售单客户','retail_c','20150531t');
-select dataupdate('零售单客户','retail_c','20150630t');
+delete from 零售单客户 where date_trunc('month',日期)::date in ('2015-07-01');
 select dataupdate('零售单客户','retail_c','20150705t');
-
-delete from 零售单 where date_trunc('month',日期)::date in ('2015-05-01','2015-06-01');
-select dataupdate('零售单','retail','20150531t');
-select dataupdate('零售单','retail','20150630t');
-
-delete from 卡流水 where date_trunc('month',业务日期)::date in ('2015-05-01','2015-06-01');
-select cardflowupdate('20150531t');
-select cardflowupdate('20150630t');
-
--- 5月门店运营数据
-select dataupdate('销售出库单', 'sale','201505');
-select dataupdate('其他出库单', 'other_out','201505');
-select dataupdate('收发汇总表', 'warehouse','201505');
-delete from 盘盈单 where date_trunc('month',日期)::date in ('2015-06-01');
-delete from 盘亏单 where date_trunc('month',日期)::date in ('2015-06-01');
-select copyk3('盘盈单','overage/hongan-201505');
-select copyk3('盘盈单','overage/huicai-201505');
-select copyk3('盘亏单','overage/hongan-201505');
-select copyk3('盘亏单','overage/huicai-201505');
 
 -- 产品成本
 -------------------------------------------------------------------------------------------------------------------------------------------

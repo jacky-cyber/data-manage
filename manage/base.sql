@@ -152,11 +152,11 @@ create table 省份 (
 -- 导入数据
 -----------------------------------------------------------------------------------------------------------------------------------------------------
 select copygbk('部门编号','other/dep_no.csv');
-select copyk3('仓库','base/warehouse-20150605');
-select copyk3('机构整合','base/institution-20150605');
-select copyk3('卡资料','base/cardinfo-20150701');
+select copyk3('仓库','base/warehouse-20150708');
+select copyk3('机构整合','base/institution-20150708');
+select copyk3('卡资料','base/cardinfo-20150708');
 select copygbk('卡类','other/card_class.csv');
-select copyk3('客户','base/kehu-20150605');
+select copyk3('客户','base/kehu-20150708');
 select copyk3('商品','base/product-20150706');
 select copyk3('商品经营目录','base/jingying-20150118');
 select copyk3('部门整合','base/department-20150104');
@@ -270,6 +270,8 @@ update 机构整合 set 实名 =
     when '昆山虹越（绍兴东湖）' then '绍兴东湖点'
     when '昆山虹越（农博园）' then '无锡农博园点'
     when '昆山虹越（常州夏溪）' then '常州夏溪点'
+    when '绿植宁波镇海点' then '宁波镇海点'
+    when '绿植上海浦南点' then '上海浦南点'
     else 名称
   end;
 delete from 机构整合 where 代码 = 21;  -- 与18同样被禁用
@@ -296,6 +298,7 @@ update 仓库 set 实名 =
     when '09.6003' then '昌邑花木城点'
     when '09.6004' then '无锡农博园点'
     when '23.6001' then '海宁花卉城点'
+    when '70.0009' then '宁波镇海点'  -- 其余绿植点均为标准名称
     when '90.1001' then '园艺家总部（淘宝）店'
     when '90.1002' then '花彩盆栽（淘宝）店'
     when '90.1003' then '多肉时光（淘宝）店'
@@ -305,11 +308,6 @@ update 仓库 set 实名 =
     when '90.1007' then '海宁国际花卉城（淘宝）店'
     when '90.1008' then '宿根花卉（淘宝）店'
     when '90.2001' then '虹越家居（天猫）专营店'
-    when '90.2002' then '虹越旗舰店'
-    when '90.2003' then '丽彩旗舰店'
-    when '90.3001' then '虹越微信商城'
-    when '90.4001' then '虹越亚马逊店'
-    when '90.5001' then '花彩商城店'
     else 名称
   end;
 
