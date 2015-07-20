@@ -4,7 +4,7 @@
  * 基础资料表处理
  */
 
-drop table if exists 日历, 商超名正则, 客户业务类型, 部门编号, 部门整合, 部门, 仓库, 仓库按代码, 仓库按名称, 机构整合, 机构, 卡资料, 卡类, 客户, 商品, 商品辅助, 商品经营目录, 省份;
+drop table if exists 日历, 周报日历, 商超名正则, 客户业务类型, 部门编号, 部门整合, 部门, 仓库, 仓库按代码, 仓库按名称, 机构整合, 机构, 卡资料, 卡类, 客户, 商品, 商品辅助, 商品经营目录, 省份;
 
 -- 建表
 ---------------------------------------------------------------------------------------------------------------------------------------------------
@@ -20,6 +20,14 @@ select
 from
   generate_series('2012-01-01'::date,'2015-12-31'::date,'1 days') d;
 alter table 日历 add primary key (日期);
+
+create table 周报日历 (
+  日期 date,
+  年 int,
+  虹越年 int,
+  虹越周 int
+);
+alter table 周报日历 add primary key (日期);
 
 create table 商超名正则 as select '华润|苏果|联华|星火|物美|小小'::varchar(255) as 模式;
 
@@ -151,13 +159,14 @@ create table 省份 (
 
 -- 导入数据
 -----------------------------------------------------------------------------------------------------------------------------------------------------
+select copygbk('周报日历','other/week_rili.csv');
 select copygbk('部门编号','other/dep_no.csv');
 select copyk3('仓库','base/warehouse-20150708');
-select copyk3('机构整合','base/institution-20150708');
+select copyk3('机构整合','base/institution-20150720');
 select copyk3('卡资料','base/cardinfo-20150708');
 select copygbk('卡类','other/card_class.csv');
 select copyk3('客户','base/kehu-20150708');
-select copyk3('商品','base/product-20150713');
+select copyk3('商品','base/product-20150720');
 select copyk3('商品经营目录','base/jingying-20150118');
 select copyk3('部门整合','base/department-20150104');
 select copyk3('部门整合','base/department-20150109');
@@ -168,6 +177,7 @@ select copyk3('部门整合','base/department-20150430');
 select copyk3('部门整合','base/department-20150504');
 select copyk3('部门整合','base/department-20150605');
 select copyk3('部门整合','base/department-20150706');
+select copyk3('部门整合','base/department-20150720');
 select copyk3('商品辅助','base/product-aid-20150226');
 select copygbk('省份','other/provin.txt');
 
@@ -241,6 +251,7 @@ set
     when '植物营养部二部（虹安）' then '植物营养部'
     when '绿植零批夏溪点' then '常州夏溪点'
     when '绿植宁波镇海点' then '宁波镇海点'
+    when '绿植上海浦南点' then '上海浦南点'
     else 现用名
   end;
 

@@ -16,8 +16,8 @@ create or replace function
 returns
   table (虹越年 int,虹越周 int,二级部门名称 varchar(255),内销 numeric (20,4),外销 numeric (20,4), 总销 numeric (20,4)) as $$
 select
-  日历.虹越年,
-  日历.虹越周,
+  周报日历.虹越年,
+  周报日历.虹越周,
   case
     when t1.客户代码 = '999.0213' or t1.摘要 ~ '花彩商城' then '花彩商城店'
     when t1.客户代码 = '999.0078.24' and 部门.实名 = '研究院' then '萌吖吖种子（淘宝）店'
@@ -46,12 +46,12 @@ select
 from
   销售出库单 t1
   left join 部门 on t1.部门 = 部门.名称
-  left join 日历 on t1.日期 = 日历.日期
+  left join 周报日历 on t1.日期 = 周报日历.日期
   left join 客户 on t1.客户代码 = 客户.代码
 where
   t1.日期 between $1 and $2
   and ((not (t1.账套 = '浙江' and ((t1.部门 in ('草业事业部','肥料介质部','海宁国美','花卉事业部','金五月销售部','丽彩销售部','温室花卉部','温室资材部','浙江丽彩','总部苗圃')) or (t1.部门 in ('盆器饰品部') and t1.日期 >= '2014-01-01')))) or (客户.是否商超客户))
-  and ((not coalesce(客户.是否商超客户,false)) or (t1.账套 = '浙江' and 日历.年 = 2014) or (t1.账套 = '虹安' and 日历.年 = 2015))
+  and ((not coalesce(客户.是否商超客户,false)) or (t1.账套 = '浙江' and 周报日历.年 = 2014) or (t1.账套 = '虹安' and 周报日历.年 = 2015))
   and not(t1.账套 = '杭州' and t1.部门 in ('草业事业部') and t1.日期 >= '2014-01-01')
   and (not(coalesce(t1.摘要,'') ~ '转库|转换仓库|从浙江虹越转移至杭州虹越|转仓|库存转移|移库|西溪店转虹安|转账套出库|库存转到产品部门') or t1.部门 = '国际业务部')
   and not(部门.一级部门名称 = '门店运营部' and t1.日期 between '2014-12-29' and '2014-12-31' and coalesce(t1.摘要,'') ~ '退回')
@@ -67,7 +67,7 @@ with w1 as (
 select
   *
 from
-  (select * from (select distinct 虹越年,虹越周 from 日历 where 日期 between '2013-12-30' and date'today') t1 cross join 周报部门编号 t2) t1
+  (select * from (select distinct 虹越年,虹越周 from 周报日历 where 日期 between '2013-12-30' and date'today') t1 cross join 周报部门编号 t2) t1
   full join (select * from 周报_k3销售数据('2013-12-30',date'today')) t2 using (虹越年,虹越周,二级部门名称)
 )
 select
