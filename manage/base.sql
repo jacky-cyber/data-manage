@@ -161,7 +161,7 @@ create table 省份 (
 -----------------------------------------------------------------------------------------------------------------------------------------------------
 select copygbk('周报日历','other/week_rili.csv');
 select copygbk('部门编号','other/dep_no.csv');
-select copyk3('仓库','base/warehouse-20150708');
+select copyk3('仓库','base/warehouse-20150721');
 select copyk3('机构整合','base/institution-20150720');
 select copyk3('卡资料','base/cardinfo-20150708');
 select copygbk('卡类','other/card_class.csv');
