@@ -12,6 +12,12 @@ select dataupdate('销售出库单','sale','20150726t');
 delete from 零售单客户 where date_trunc('month',日期)::date in ('2015-07-01');
 select dataupdate('零售单客户','retail_c','20150726t');
 
+-- 用于盘点分析
+delete from 盘盈单 where date_trunc('month',日期)::date in ('2015-07-01');
+select dataupdate('盘盈单','overage','20150726t');
+delete from 盘亏单 where date_trunc('month',日期)::date in ('2015-07-01');
+select dataupdate('盘亏单','shortage','20150726t');
+
 -- 产品成本
 -------------------------------------------------------------------------------------------------------------------------------------------
 drop table if exists 产品成本;
