@@ -67,8 +67,8 @@ with w1 as (
 select
   *
 from
-  (select * from (select distinct 虹越年,虹越周 from 周报日历 where 日期 between '2013-12-30' and date'today') t1 cross join 周报部门编号 t2) t1
-  full join (select * from 周报_k3销售数据('2013-12-30',date'today')) t2 using (虹越年,虹越周,二级部门名称)
+  (select * from (select distinct 虹越年,虹越周 from 周报日历 where 日期 between '2014-01-01' and date'today') t1 cross join 周报部门编号 t2) t1
+  full join (select * from 周报_k3销售数据('2014-01-01',date'today')) t2 using (虹越年,虹越周,二级部门名称)
 )
 select
   t1.*,
