@@ -5,18 +5,13 @@
  */
 
 -- 用于销售周报
-delete from 销售出库单 where date_trunc('month',日期)::date in ('2015-07-01', '2015-08-01');
-select dataupdate('销售出库单','sale','201507');
+delete from 销售出库单 where date_trunc('month',日期)::date in ('2015-08-01');
+select dataupdate('销售出库单','sale','');
 
 -- 用于周报客流
-delete from 零售单客户 where date_trunc('month',日期)::date in ('2015-07-01', '2015-08-01');
-select dataupdate('零售单客户','retail_c','20150802t');
+delete from 零售单客户 where date_trunc('month',日期)::date in ( '2015-08-01');
+select dataupdate('零售单客户','retail_c','');
 
--- 用于盘点分析
-delete from 盘盈单 where date_trunc('month',日期)::date in ('2015-07-01');
-select dataupdate('盘盈单','overage','20150726t');
-delete from 盘亏单 where date_trunc('month',日期)::date in ('2015-07-01');
-select dataupdate('盘亏单','shortage','20150726t');
 
 -- 产品成本
 -------------------------------------------------------------------------------------------------------------------------------------------

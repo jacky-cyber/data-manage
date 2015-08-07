@@ -99,6 +99,9 @@ begin
     select dataupdate(''收发汇总表'',''warehouse'',''%s'');
     select dataupdate(''调拨单'',''requisition'',''%s'');
   ',s,s,s,s,s,s,s,s,s,s,s,s);
+  if s >= '201507' then
+    execute format('select dataupdate(''成本调整单'',''adjust'',''%s'');',s);
+  end if;
 end
 $body$
 language plpgsql volatile;

@@ -161,11 +161,11 @@ create table 省份 (
 -----------------------------------------------------------------------------------------------------------------------------------------------------
 select copygbk('周报日历','other/week_rili.csv');
 select copygbk('部门编号','other/dep_no.csv');
-select copyk3('仓库','base/warehouse-20150721');
-select copyk3('机构整合','base/institution-20150720');
-select copyk3('卡资料','base/cardinfo-20150708');
+select copyk3('仓库','base/warehouse-20150807');
+select copyk3('机构整合','base/institution-20150807');
+select copyk3('卡资料','base/cardinfo-20150807');
 select copygbk('卡类','other/card_class.csv');
-select copyk3('客户','base/kehu-20150708');
+select copyk3('客户','base/kehu-20150807');
 select copyk3('商品','base/product-20150803');
 select copyk3('商品经营目录','base/jingying-20150118');
 select copyk3('部门整合','base/department-20150104');
@@ -178,6 +178,7 @@ select copyk3('部门整合','base/department-20150504');
 select copyk3('部门整合','base/department-20150605');
 select copyk3('部门整合','base/department-20150706');
 select copyk3('部门整合','base/department-20150720');
+select copyk3('部门整合','base/department-20150807');
 select copyk3('商品辅助','base/product-aid-20150226');
 select copygbk('省份','other/provin.txt');
 
