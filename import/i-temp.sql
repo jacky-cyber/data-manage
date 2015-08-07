@@ -6,7 +6,7 @@
 
 -- 用于销售周报
 delete from 销售出库单 where date_trunc('month',日期)::date in ('2015-07-01', '2015-08-01');
-select dataupdate('销售出库单','sale','20150802t');
+select dataupdate('销售出库单','sale','201507');
 
 -- 用于周报客流
 delete from 零售单客户 where date_trunc('month',日期)::date in ('2015-07-01', '2015-08-01');
