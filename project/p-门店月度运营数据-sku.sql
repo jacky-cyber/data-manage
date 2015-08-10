@@ -6,7 +6,7 @@
 
 with w日期范围 as (
 select
-  '[2015-01-01,2015-05-31]'::daterange as 范围
+  '[2015-01-01,2015-07-31]'::daterange as 范围
 ), w0_1 as (
 select
   部门.二级部门编号,
@@ -16,10 +16,13 @@ from
   销售出库单 t1
   inner join 部门 on t1.部门 = 部门.名称
   left join 日历 on t1.日期 = 日历.日期
+  left join 客户 on t1.客户代码 = 客户.代码
 where
   t1.客户代码 not in (select 代码 from 客户 where 是否关联客户)
   and (select 范围 from w日期范围) @> t1.日期
   and 部门.一级部门名称 = '门店运营部'
+  and not (t1.客户代码 in ('021.9998','021.9999') and 部门.二级部门名称 = '浦东宣桥店')
+  and not (客户.是否商超客户)
 group by
   1,2,3
 ),w0_2 as (
