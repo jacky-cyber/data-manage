@@ -6,11 +6,11 @@
 
 -- 用于销售周报
 delete from 销售出库单 where date_trunc('month',日期)::date in ('2015-08-01');
-select dataupdate('销售出库单','sale','');
+select dataupdate('销售出库单','sale','20150809t');
 
 -- 用于周报客流
 delete from 零售单客户 where date_trunc('month',日期)::date in ( '2015-08-01');
-select dataupdate('零售单客户','retail_c','');
+select dataupdate('零售单客户','retail_c','20150809t');
 
 
 -- 产品成本
@@ -23,7 +23,7 @@ select
   账套,
   单位成本
 from
-  (select 产品长代码,账套,sum(成本) / nullif(sum(实发数量),0) as 单位成本 from 销售出库单 where 日期 <= '2015-04-30' group by 1,2) t
+  (select 产品长代码,账套,sum(成本) / nullif(sum(实发数量),0) as 单位成本 from 销售出库单 where 日期 between '2014-01-01' and '2015-07-31' group by 1,2) t
 where
   单位成本 > 0
 order by
