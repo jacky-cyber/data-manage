@@ -6,11 +6,11 @@
 
 -- 用于销售周报
 delete from 销售出库单 where date_trunc('month',日期)::date in ('2015-08-01');
-select dataupdate('销售出库单','sale','20150816t');
+select dataupdate('销售出库单','sale','20150823t');
 
 -- 用于周报客流
 delete from 零售单客户 where date_trunc('month',日期)::date in ( '2015-08-01');
-select dataupdate('零售单客户','retail_c','20150816t');
+select dataupdate('零售单客户','retail_c','20150823t');
 
 delete from 卡流水 where 业务日期 >= '2015-08-01';
 select cardflowupdate('20150820t');

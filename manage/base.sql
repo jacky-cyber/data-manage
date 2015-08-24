@@ -177,7 +177,7 @@ select copyk3('机构整合','base/institution-20150807');
 select copyk3('卡资料','base/cardinfo-20150820t');
 select copygbk('卡类','other/card_class.csv');
 select copyk3('客户','base/kehu-20150807');
-select copyk3('商品','base/product-20150817');
+select copyk3('商品','base/product-20150824');
 select copyk3('商品经营目录','base/jingying-20150118');
 select copyk3('部门整合','base/department-20150104');
 select copyk3('部门整合','base/department-20150109');

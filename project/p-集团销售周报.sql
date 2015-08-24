@@ -3,7 +3,6 @@
  *
  * 周报（第22周更新）
  */
-insert into 销售出库单(账套,日期,部门,未税金额) values ('国美','2015-08-09','长安苗圃', '99400');
 drop table if exists 周报部门编号, 周报数据;
 create temp table 周报部门编号 as select * from 部门编号 where 二级部门名称 not in ('温室资材部','草业事业部');
 
