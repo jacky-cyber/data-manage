@@ -1,0 +1,50 @@
+with w日期范围 as (
+select
+  '[2014-01-01,2015-07-31]'::daterange as 范围
+),w1 as (
+select
+  机构.二级部门编号 as 门店编号,
+  机构.实名 as 门店,
+  日历.年,
+  日历.月,
+  case when 卡类.卡类a = '会员' then '会员' else '前台非会员' end as 客户类型,
+  case when 卡类.卡类a = '会员' then 卡类.卡类b end as 会员类型,
+  count(distinct t1.会员卡) as 消费卡数,
+  count(distinct t1.单据编号) as 单据数,
+  sum(t1.实付金额) as 会员消费金额
+from
+  零售单明细 t1
+  inner join 机构 on t1.分店 = 机构.名称
+  left join 日历 on t1.日期 = 日历.日期
+  left join 卡资料 on t1.会员卡 = 卡资料.卡号
+  left join 卡类 on 卡资料.卡类型 = 卡类.卡类型
+where
+  机构.一级部门名称 = '门店运营部'
+  and t1.单据编号 not in (select 单据编号 from 零售单客户 where array[lower(客户业务类型)] <@ any(select array_agg(代码) from 客户业务类型))
+  and t1.产品长代码 != '9.6.7.021.00001'
+  and (select 范围 from w日期范围) @> t1.日期
+group by
+  1,2,3,4,5,6
+),w2 as (
+select
+  部门.二级部门编号 as 门店编号,
+  部门.实名 as 门店,
+  日历.年,
+  日历.月,
+  '后台非会员' as 客户类型,
+  null as 会员类型,
+  sum(0) as 消费卡数,
+  count(distinct t1.单据编号) as 单据数,
+  sum(t1.含税金额) as 销售额
+from
+  销售出库单 t1
+  inner join 部门 on t1.部门 = 部门.名称
+  left join 日历 on t1.日期 = 日历.日期
+where
+  部门.一级部门名称 = '门店运营部'
+  and t1.客户代码 not in (select 代码 from 客户 where 是否关联客户)
+  and (select 范围 from w日期范围) @> t1.日期
+  and t1.单据编号 !~* '^rth|^dx'
+group by
+  1,2,3,4,5,6
+) select * from w1 union all select * from w2;

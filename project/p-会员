@@ -1,0 +1,64 @@
+/**
+ * 2015 cai
+ *
+ * 会员消费分析
+ */
+
+with w日期范围 as (
+select
+  '[2015-01-01,2015-07-31]'::daterange as 范围
+),w1 as (
+select
+  t1.会员卡 as 卡号,
+  日历.月,
+  count(distinct t1.单据编号) as 消费次数,
+  sum(t1.实付金额) as 消费金额
+from
+  零售单明细 t1
+  left join 日历 on t1.日期 = 日历.日期
+where
+  t1.会员卡 is not null
+  and t1.单据编号 not in (select 单据编号 from 零售单客户 where array[lower(客户业务类型)] <@ any(select array_agg(代码) from 客户业务类型))
+  and (select 范围 from w日期范围) @> t1.日期
+group by
+  1,2
+),w2 as (
+select
+  t1.卡号,
+  日历.月,
+  sum(case t1.发生方向 when '加' then t1.发生金额 else -t1.发生金额 end) as 充值金额
+from
+  卡流水 t1
+  left join 日历 on t1.业务日期::date = 日历.日期
+where
+  t1.账户名称 = '储值账户'
+  and t1.业务类型 = '卡金额充值'
+  and (select 范围 from w日期范围) @> t1.业务日期::date
+group by
+  1,2
+),w3 as (
+select
+  t1.卡号,
+  日历.月,
+  sum(case t1.发生方向 when '加' then -t1.发生金额 else t1.发生金额 end) as 支付金额
+from
+  卡流水 t1
+  left join 日历 on t1.业务日期::date = 日历.日期
+where
+  t1.账户名称 = '储值账户'
+  and t1.业务类型 = '卡消费流水'
+  and (select 范围 from w日期范围) @> t1.业务日期::date
+group by
+  1,2
+)
+select
+  *
+from
+  w1
+  full join w2 using(卡号,月)
+  full join w3 using(卡号,月)
+  left join (select 卡号,卡类型,发卡日期,会员名称 from 卡资料) t1 using(卡号)
+  left join 卡类 using(卡类型)
+ order by
+  1,2,3;
+
