@@ -1,19 +1,19 @@
 /**
  * 2015 cai
  */
-drop table if exists 周报数据;
+drop table if exists 月报数据;
 
--- 周报_k3销售数据 (date,date)
+-- 月报_k3销售数据 (date,date)
 -- i: 开始日期,结束日期
 -- o: k3周销售数据表
-drop function if exists 周报_k3销售数据 (date,date);
+drop function if exists 月报_k3销售数据 (date,date);
 create or replace function
-  周报_k3销售数据 (date,date)
+  月报_k3销售数据 (date,date)
 returns
   table (年 int,期 int,二级部门名称 varchar(255),内销 numeric (20,4),外销 numeric (20,4), 总销 numeric (20,4)) as $$
 select
-  报表日历.虹越年,
-  报表日历.虹越周,
+  报表日历.年,
+  报表日历.月,
   case
     when t1.客户代码 = '999.0213' or t1.摘要 ~ '花彩商城' then '花彩商城店'
     when t1.客户代码 = '999.0078.24' and 部门.实名 = '研究院' then '萌吖吖种子（淘宝）店'
@@ -56,15 +56,15 @@ group by
   1,2,3;
 $$ language sql stable;
 
--- 周报数据
+-- 月报数据
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------
-create table 周报数据 as
+create table 月报数据 as
 with w1 as (
 select
   *
 from
-  (select * from (select distinct 虹越年 年,虹越周 期 from 报表日历 where 日期 between '2014-01-01' and date'today') t1 cross join 报表部门 t2) t1
-  full join (select * from 周报_k3销售数据('2014-01-01',date'today')) t2 using (年,期,二级部门名称)
+  (select * from (select distinct 年,月 期 from 报表日历 where 日期 between '2014-01-01' and date'today') t1 cross join 报表部门 t2) t1
+  full join (select * from 月报_k3销售数据('2014-01-01',date'today')) t2 using (年,期,二级部门名称)
 )
 select
   t1.*,
@@ -86,56 +86,54 @@ from
   left join w1 t3 on t1.二级部门名称 = t3.二级部门名称 and t1.年 = t3.年 + 1 and t1.期 = t3.期;
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------
--- 周报_本期(int,int)
+-- 月报_本期(int,int)
 -- i: 期,年
 -- o: 本周销售表
-drop function if exists 周报_本期 (int,int);
+drop function if exists 月报_本期 (int,int);
 create or replace function
-  周报_本期 (int default hyweek (date 'today') - 1,int default hyyear (date 'today'))
+  月报_本期 (int default date_part('month',date'today') - 1,int default date_part('year',date'today'))
 returns
   table (模块编号 int,一级部门编号 int,二级部门编号 int,内销 numeric (20,4),外销 numeric (20,4),总销 numeric (20,4),内销同比 numeric (20,4),外销同比 numeric (20,4),总销同比 numeric (20,4),总销环比 numeric (20,4) ) as $proc$
-declare s text := 'sum(内销) as 内销,sum (外销) as 外销,sum (总销) as 总销,(sum (内销) - nullif(sum (上年内销),0))/abs(nullif(sum (上年内销),0)) as 内销同比, (sum (外销) - nullif(sum (上年外销),0))/abs(nullif(sum (上年外销),0)) as 外销同比, (sum (总销) - nullif(sum (上年总销),0))/abs(nullif(sum (上年总销),0)) as 总销同比,(sum (总销) - nullif(sum (上期总销),0)) / abs(nullif(sum (上期总销),0)) as 总销环比 from 周报数据 where 年 = %s and 期 = %s group by 1,2,3)';
+declare s text := 'sum(内销) as 内销,sum (外销) as 外销,sum (总销) as 总销,(sum (内销) - nullif(sum (上年内销),0))/abs(nullif(sum (上年内销),0)) as 内销同比, (sum (外销) - nullif(sum (上年外销),0))/abs(nullif(sum (上年外销),0)) as 外销同比, (sum (总销) - nullif(sum (上年总销),0))/abs(nullif(sum (上年总销),0)) as 总销同比,(sum (总销) - nullif(sum (上期总销),0)) / abs(nullif(sum (上期总销),0)) as 总销环比 from 月报数据 where 年 = %s and 期 = %s group by 1,2,3)';
 begin
   return query execute format ('(select 模块编号,一级部门编号,二级部门编号,' || s || ' union all (select 模块编号,一级部门编号,999 as 二级部门编号,' || s || ' union all (select 模块编号,999 as 一级部门编号,999 as 二级部门编号,' || s || ' union all (select 999 as 模块编号,999 as 一级部门编号,999 as 二级部门编号,' || s || ' order by 模块编号,一级部门编号,二级部门编号',$2,$1,$2,$1,$2,$1,$2,$1);
 end;
 $proc$ language plpgsql stable;
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------
--- 周报_本年(int,int)
+-- 月报_本年(int,int)
 -- i: 期,年
 -- o: 本周销售表
-drop function if exists 周报_本年 (int,int);
+drop function if exists 月报_本年 (int,int);
 create or replace function
-  周报_本年 (int default hyweek (date 'today') - 1,int default hyyear (date 'today'))
+  月报_本年 (int default date_part('month',date'today') - 1,int default date_part('year',date'today'))
 returns
   table (模块编号 int,一级部门编号 int,二级部门编号 int,累计内销 numeric (20,4),累计外销 numeric (20,4),累计总销 numeric (20,4),累计内销同比 numeric (20,4),累计外销同比 numeric (20,4),累计总销同比 numeric (20,4)) as $proc$
-declare s text := 'sum(累计内销) as 累计内销,sum (累计外销) as 累计外销,sum (累计总销) as 累计总销,(sum (累计内销) - nullif(sum (上年累计内销),0))/abs(nullif(sum (上年累计内销),0)) as 累计内销同比, (sum (累计外销) - nullif(sum (上年累计外销),0))/abs(nullif(sum (上年累计外销),0)) as 累计外销同比, (sum (累计总销) - nullif(sum (上年累计总销),0))/abs(nullif(sum (上年累计总销),0)) as 累计总销同比 from 周报数据 where 年 = %s and 期 = %s group by 1,2,3)';
+declare s text := 'sum(累计内销) as 累计内销,sum (累计外销) as 累计外销,sum (累计总销) as 累计总销,(sum (累计内销) - nullif(sum (上年累计内销),0))/abs(nullif(sum (上年累计内销),0)) as 累计内销同比, (sum (累计外销) - nullif(sum (上年累计外销),0))/abs(nullif(sum (上年累计外销),0)) as 累计外销同比, (sum (累计总销) - nullif(sum (上年累计总销),0))/abs(nullif(sum (上年累计总销),0)) as 累计总销同比 from 月报数据 where 年 = %s and 期 = %s group by 1,2,3)';
 begin
   return query execute format ('(select 模块编号,一级部门编号,二级部门编号,' || s || ' union all (select 模块编号,一级部门编号,999 as 二级部门编号,' || s || ' union all (select 模块编号,999 as 一级部门编号,999 as 二级部门编号,' || s || ' union all (select 999 as 模块编号,999 as 一级部门编号,999 as 二级部门编号,' || s || ' order by 模块编号,一级部门编号,二级部门编号',$2,$1,$2,$1,$2,$1,$2,$1);
 end;
 $proc$ language plpgsql stable;
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------
--- 周报_趋势(int,int,int)
+-- 月报_趋势(int,int,int)
 -- i: 模块编号,期,年,
 -- o: 销售趋势
-drop function if exists 周报_趋势 (int,int,int);
+drop function if exists 月报_趋势 (int,int,int);
 create or replace function
-  周报_趋势 (int default 1,int default hyweek (date 'today') - 1,int default hyyear (date 'today'))
+  月报_趋势 (int default 1, int default date_part('month',date'today') - 1,int default date_part('year',date'today'))
 returns
-  table (期 int,外销 numeric (20,4),上年外销 numeric (20,4),日均外销 numeric (20,4),上年日均外销 numeric (20,4),外销同比 numeric (20,4)) as $$
+  table (期 int,外销 numeric (20,4),上年外销 numeric (20,4),外销同比 numeric (20,4)) as $$
 select
   *,
-  外销 / 期 / 7 as 日均外销,
-  上年外销 / 期 / 7 as 上年日均外销,
   外销 / nullif(上年外销,0) - 1 as 同比
 from
-  (select 期,sum(sum(外销)) over (order by 期) as 外销 from 周报数据 where 年 = $3 and 期 <= $2 and 模块编号 != $1 group by 1 ) t1
-  full join ( select 期,sum(sum(外销)) over (order by 期) as 上年外销 from 周报数据 where 年 = $3 - 1 and 模块编号 != $1 group by 1 ) t2 using (期)
+  (select 期,sum(sum(外销)) over (order by 期) as 外销 from 月报数据 where 年 = $3 and 期 <= $2 and 模块编号 != $1 group by 1 ) t1
+  full join ( select 期,sum(sum(外销)) over (order by 期) as 上年外销 from 月报数据 where 年 = $3 - 1 and 模块编号 != $1 group by 1 ) t2 using (期)
 order by
   1
 $$ language sql stable;
 
-select * from 周报_本期();
-select * from 周报_本年();
-select * from 周报_趋势();
+select * from 月报_本期();
+select * from 月报_本年();
+select * from 月报_趋势();

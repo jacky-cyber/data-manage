@@ -4,7 +4,7 @@
  * 基础资料表处理
  */
 
-drop table if exists 日历, 周报日历, 商超名正则, 客户业务类型, 部门编号, 部门整合, 部门, 仓库, 仓库按代码, 仓库按名称, 机构整合, 机构, 卡资料, 卡类, 客户, 商品, 商品辅助, 商品经营目录, 省份, posbank, 花卡;
+drop table if exists 日历, 报表日历, 报表部门, 商超名正则, 客户业务类型, 部门编号, 部门整合, 部门, 仓库, 仓库按代码, 仓库按名称, 机构整合, 机构, 卡资料, 卡类, 客户, 商品, 商品辅助, 商品经营目录, 省份, posbank, 花卡;
 
 -- 建表
 ---------------------------------------------------------------------------------------------------------------------------------------------------
@@ -21,13 +21,14 @@ from
   generate_series('2012-01-01'::date,'2015-12-31'::date,'1 days') d;
 alter table 日历 add primary key (日期);
 
-create table 周报日历 (
+create table 报表日历 (
   日期 date,
   年 int,
+  月 int,
   虹越年 int,
   虹越周 int
 );
-alter table 周报日历 add primary key (日期);
+alter table 报表日历 add primary key (日期);
 
 create table 商超名正则 as select '华润|苏果|联华|星火|物美|小小'::varchar(255) as 模式;
 
@@ -170,14 +171,15 @@ create table 花卡 (
 
 -- 导入数据
 -----------------------------------------------------------------------------------------------------------------------------------------------------
-select copygbk('周报日历','other/week_rili.csv');
+select copygbk('报表日历','other/week_rili.csv');
 select copygbk('部门编号','other/dep_no.csv');
+create table 报表部门 as select * from 部门编号 where 二级部门名称 not in ('温室资材部','草业事业部');
 select copyk3('仓库','base/warehouse-20150807');
 select copyk3('机构整合','base/institution-20150807');
-select copyk3('卡资料','base/cardinfo-20150820t');
+select copyk3('卡资料','base/cardinfo-20150827');
 select copygbk('卡类','other/card_class.csv');
 select copyk3('客户','base/kehu-20150807');
-select copyk3('商品','base/product-20150824');
+select copyk3('商品','base/product-20150831');
 select copyk3('商品经营目录','base/jingying-20150118');
 select copyk3('部门整合','base/department-20150104');
 select copyk3('部门整合','base/department-20150109');
