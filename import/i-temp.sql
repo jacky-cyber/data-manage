@@ -5,12 +5,12 @@
  */
 
 -- 用于销售周报
-delete from 销售出库单 where date_trunc('month',日期)::date in ('2015-08-01');
-select dataupdate('销售出库单','sale','20150830t');
+delete from 销售出库单 where date_trunc('month',日期)::date in ('2015-08-01','2015-09-01');
+select dataupdate('销售出库单','sale','20150906t');
 
 -- 用于周报客流
-delete from 零售单客户 where date_trunc('month',日期)::date in ( '2015-08-01');
-select dataupdate('零售单客户','retail_c','20150830t');
+delete from 零售单客户 where date_trunc('month',日期)::date in ('2015-08-01','2015-09-01');
+select dataupdate('零售单客户','retail_c','20150906t');
 
 delete from 卡流水 where 业务日期 >= '2015-08-01';
 select cardflowupdate('20150820t');
@@ -18,13 +18,28 @@ select cardflowupdate('20150820t');
 drop table if exists 网店销售;
 create table 网店销售(
   年 int,
-  季度 int,
+  月 int,
+  网店类别 varchar(255),
   网店 varchar(255),
   销售额 numeric(20,4),
   成交人数 numeric(20,4)
 );
 
 select copygbk('网店销售','other/ali_sale.csv');
+select copygbk('网店销售','other/huacai_sale.csv');
+
+drop table if exists 网店周销售;
+create table 网店周销售(
+  年 int,
+  周 int,
+  网店类别 varchar(255),
+  网店 varchar(255),
+  销售额 numeric(20,4),
+  成交人数 numeric(20,4)
+);
+
+select copygbk('网店周销售','other/ali_week_sale.csv');
+select copygbk('网店周销售','other/huacai_week_sale.csv');
 -- 产品成本
 -------------------------------------------------------------------------------------------------------------------------------------------
 drop table if exists 产品成本;
