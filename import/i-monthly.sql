@@ -5,3 +5,4 @@ select monthlyupdate('201504');
 select monthlyupdate('201505');
 select monthlyupdate('201506');
 select monthlyupdate('201507');
+select monthlyupdate('201508');

@@ -16,9 +16,12 @@ from
   销售出库单 t1
   inner join 部门 on t1.部门 = 部门.名称
   left join 日历 on t1.日期 = 日历.日期
+  left join 客户 on t1.客户代码 = 客户.代码
 where
   部门.一级部门名称 = '门店运营部'
   and t1.客户代码 not in (select 代码 from 客户 where 是否关联客户)
+  and not (t1.客户代码 in ('021.9998','021.9999') and 部门.二级部门名称 = '浦东宣桥店')
+  and ((not coalesce(客户.是否商超客户,false)) or (t1.账套 = '浙江' and 报表日历.年 = 2014) or (t1.账套 = '虹安' and 报表日历.年 = 2015))
 group by
   1,2,3
 order by

@@ -21,7 +21,7 @@ from
   left join 日历 on t1.日期 = 日历.日期
 where
   t1.客户代码 not in (select 代码 from 客户 where 是否关联客户)
-  and t1.日期 between '2012-01-01' and '2015-07-31'
+  and t1.日期 between '2012-01-01' and '2015-08-31'
 group by
   1,2,3
 ),w2 as (

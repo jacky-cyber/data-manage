@@ -13,7 +13,7 @@ set
 from
   商品
 where
-  未税金额 is null
+  (未税金额 is null or 未税金额 = 0)
   and 产品长代码 = 商品.代码;
 
 -- 更新三账套的建议零售价

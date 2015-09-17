@@ -14,7 +14,7 @@ where
   and coalesce(lower(客户业务类型),'') not in (select 代码 from 客户业务类型)
   and not (t1.分店 = '海宁国际花卉城' and t1.日期 <= '2014-12-24')
   and 报表日历.虹越年 >= 2014
-  and 报表日历.虹越周 <= 36
+  and 报表日历.虹越周 <= 37
 group by
   1,2,3,4
  )
