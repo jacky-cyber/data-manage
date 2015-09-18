@@ -176,7 +176,7 @@ select copygbk('部门编号','other/dep_no.csv');
 create table 报表部门 as select * from 部门编号 where 二级部门名称 not in ('温室资材部','草业事业部');
 select copyk3('仓库','base/warehouse-20150908');
 select copyk3('机构整合','base/institution-20150908');
-select copyk3('卡资料','base/cardinfo-20150908');
+select copyk3('卡资料','base/cardinfo-20150917');
 select copygbk('卡类','other/card_class.csv');
 select copyk3('客户','base/kehu-20150908');
 select copyk3('商品','base/product-20150914');
