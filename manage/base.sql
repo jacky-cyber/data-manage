@@ -4,7 +4,7 @@
  * 基础资料表处理
  */
 
-drop table if exists 日历, 报表日历, 报表部门, 商超名正则, 客户业务类型, 部门编号, 部门整合, 部门, 仓库, 仓库按代码, 仓库按名称, 机构整合, 机构, 卡资料, 卡类, 客户, 商品, 商品辅助, 商品经营目录, 省份, posbank, 花卡;
+drop table if exists 日历, 报表日历, 报表部门, 商超名正则, 客户业务类型, 部门编号, 部门整合, 部门, 仓库, 仓库整合,仓库按代码, 仓库按名称, 机构整合, 机构, 卡资料, 卡类, 客户, 商品, 商品辅助, 商品经营目录, 省份, posbank, 花卡;
 
 -- 建表
 ---------------------------------------------------------------------------------------------------------------------------------------------------
@@ -60,9 +60,9 @@ create table 部门整合 (
   图片 varchar(255)
 );
 
-create table 仓库 (
+create table 仓库整合 (
   文件路径 varchar(255),
-  代码 varchar(255) primary key,
+  代码 varchar(255),
   名称 varchar(255),
   全名 varchar(255),
   分支机构整合 varchar(255),
@@ -174,7 +174,8 @@ create table 花卡 (
 select copygbk('报表日历','other/week_rili.csv');
 select copygbk('部门编号','other/dep_no.csv');
 create table 报表部门 as select * from 部门编号 where 二级部门名称 not in ('温室资材部','草业事业部');
-select copyk3('仓库','base/warehouse-20150908');
+select copyk3('仓库整合','base/warehouse-20150807');
+select copyk3('仓库整合','base/warehouse-20150908');
 select copyk3('机构整合','base/institution-20150908');
 select copyk3('卡资料','base/cardinfo-20150917');
 select copygbk('卡类','other/card_class.csv');
@@ -309,8 +310,12 @@ alter table 机构 add primary key (名称);
 
 -- 仓库
 -------------------------------------------------------------------------------------------------------------------------------------------
-alter table 仓库 add column 实名 varchar(255);
-update 仓库 set 实名 =
+alter table 仓库整合
+  add column 现用名 varchar(255),
+  add column 实名 varchar(255);
+update 仓库整合 set 现用名 = t.名称 from (select * from 仓库整合 where 文件路径 = (select max(文件路径) from 仓库整合)) t where t.代码 = 仓库整合.代码;
+
+update 仓库整合 set 实名 =
   case 代码
     when '03.6001' then '海宁金筑园店'
     when '03.6003' then '海宁硖石店'
@@ -328,7 +333,7 @@ update 仓库 set 实名 =
     when '09.6004' then '无锡农博园点'
     when '23.6001' then '海宁花卉城点'
     when '70.0009' then '宁波镇海点'  -- 其余绿植点均为标准名称
-    when '90.1001' then '园艺家总部（淘宝）店'
+    -- when '90.1001' then '园艺家总部（淘宝）店'
     when '90.1002' then '花彩盆栽（淘宝）店'
     when '90.1003' then '多肉时光（淘宝）店'
     when '90.1004' then '萌吖吖种子（淘宝）店'
@@ -337,15 +342,16 @@ update 仓库 set 实名 =
     when '90.1007' then '海宁国际花卉城（淘宝）店'
     when '90.1008' then '宿根花卉（淘宝）店'
     when '90.2001' then '虹越家居（天猫）专营店'
-    else 名称
+    else 现用名
   end;
 
-update 仓库 set 实名 = '商超运营部' where 名称 ~ (select 模式 from 商超名正则);
+update 仓库整合 set 实名 = '商超运营部' where 名称 ~ (select 模式 from 商超名正则);
+update 仓库整合 set 实名 = '阿里仓' where 名称 = '总部网店';
 
-create table 仓库按代码 as select distinct t1.代码,t1.名称,t1.实名,t2.* from 仓库 t1 left join (select * from 部门编号 where 模块名称 = '平台') t2 on t1.实名= t2.二级部门名称;
+create table 仓库按代码 as select distinct t1.代码,t1.实名,t2.* from 仓库整合 t1 left join (select * from 部门编号 where 模块名称 = '平台') t2 on t1.实名= t2.二级部门名称;
 alter table 仓库按代码 add primary key (代码);
 
-create table 仓库按名称 as select distinct t1.名称,t1.实名,t2.* from 仓库 t1 left join (select * from 部门编号 where 模块名称 = '平台') t2 on t1.实名= t2.二级部门名称;
+create table 仓库按名称 as select distinct t1.名称,t1.实名,t2.* from 仓库整合 t1 left join (select * from 部门编号 where 模块名称 = '平台') t2 on t1.实名= t2.二级部门名称;
 alter table 仓库按名称 add primary key (名称);
 
 -- 客户
